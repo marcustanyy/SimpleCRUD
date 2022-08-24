@@ -1,0 +1,55 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  
+}
+
+.App-header {
+  background-color: #030303;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: rgb(253, 253, 253);
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th, tr {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 30px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+.card-content{
+  text-align: justify;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
