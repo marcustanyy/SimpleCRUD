@@ -7,10 +7,10 @@ app.use(cors());
 app.use(express.json());
 
 const db = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '1234',
-    database: 'userdb'
+    host: process.env.MYSQL_HOST,
+    user: process.env.MYSQL_USER,
+    password: process.env.MYSQL_PASSWORD,
+    database: process.env.MYSQL_DATABASE
 });
 db.connect((err) => {
     if (err) throw err;
@@ -22,9 +22,9 @@ app.post('/insert', (req, res) => {
     const wpm = req.body.wpm
     const accuracy = req.body.accuracy
 
-    db.query('INSERT INTO users (username, WordsPerMin, Accuracy) VALUES(?,?,?)', [username, wpm, accuracy], 
+    db.query('INSERT INTO users (username, WordsPerMin, Accuracy) VALUES(?,?,?)', [username, wpm, accuracy],
         (err, result) => {
-            if(err) {
+            if (err) {
                 console.log(err);
             } else {
                 res.send("Values inserted!")

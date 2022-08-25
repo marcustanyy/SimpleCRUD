@@ -1,0 +1,50 @@
+services:
+  mysql:
+    image: "mysql:latest"
+    environment:
+      - MYSQL_DATABASE=userdb
+      - MYSQL_ROOT_PASSWORD=1234
+      - MYSQL_PASSWORD=1234
+      - MYSQL_USER=root
+    ports:
+      - '3306:3306'
+    healthcheck:
+      test: "mysql $$MYSQL_DATABASE -u$$MYSQL_USER -p$$MYSQL_PASSWORD -e 'SELECT 1;'"
+      interval: 20s
+      timeout: 10s
+      retries: 5
+  nginx:
+    depends_on:
+      - api
+      - client
+    restart: always
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./nginx
+    ports:
+      - "3000:80"
+  api:
+    depends_on:
+      mysql:
+        condition: service_healthy
+    build:
+      dockerfile: Dockerfile.dev
+      context: "./server"
+    volumes:
+      - /app/node_modules
+      - ./server:/app
+    environment:
+      - MYSQL_USER=root
+      - MYSQL_HOST=mysql
+      - MYSQL_DATABASE=userdb
+      - MYSQL_ROOT_PASSWORD=1234
+      - MYSQL_PASSWORD=1234
+    restart: on-failure
+  client:
+    stdin_open: true
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./client/simple-crud
+    volumes:
+      - /app/node_modules
+      - ./client/simple-crud:/app

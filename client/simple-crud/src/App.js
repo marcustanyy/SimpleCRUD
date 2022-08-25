@@ -1,9 +1,9 @@
 import './App.css';
-import {useState, useEffect} from 'react';
+import { useState, useEffect } from 'react';
 import Axios from 'axios';
 import randomWords from 'random-words';
 import Darkmode from 'darkmode-js';
- 
+
 
 const NUM_OF_WORDS = 300;
 const SECONDS = 60;
@@ -35,11 +35,11 @@ function App() {
   }
 
   function startCountDown() {
-    if(gameState === "waiting") {
+    if (gameState === "waiting") {
       setGameState("started");
       let interval = setInterval(() => {
         setCountDown((prevCountDown) => {
-          if(prevCountDown === 0) {
+          if (prevCountDown === 0) {
             clearInterval(interval);
             setGameState("finished");
             setCurrWord("");
@@ -47,19 +47,19 @@ function App() {
           } else {
             return prevCountDown - 1;
           }
-          })
+        })
       }, 1000);
     }
   }
 
-  function handleKeyStroke({keyCode, key}) {
+  function handleKeyStroke({ keyCode, key }) {
     if (keyCode === 32) {
       if (checkWord()) {
         setCorrectCounter(noOfCorrectWords + 1);
-        console.log(noOfCorrectWords);
+        //console.log(noOfCorrectWords);
       } else {
         setWrongCounter(noOfWrongWords + 1);
-        console.log(noOfWrongWords);
+        //console.log(noOfWrongWords);
       }
       setCurretWordIdx(currWordIdx + 1);
       setCurrWord("");
@@ -90,12 +90,12 @@ function App() {
       }
     }
   }
-  
+
 
   function displayResult() {
-    console.log(noOfCorrectWords);
+    //console.log(noOfCorrectWords);
     accuracy = Math.round(noOfCorrectWords / (noOfCorrectWords + noOfWrongWords) * 100);
-    console.log(accuracy);
+    //console.log(accuracy);
     wpm = Math.round(currWordIdx / 100 * accuracy);
   }
 
@@ -105,26 +105,26 @@ function App() {
 
   // APIs
   const insertUserResult = () => {
-    console.log("inserting")
-    Axios.post('http://localhost:3001/insert', {
+    //console.log("inserting")
+    Axios.post('/api/insert', {
       username: username,
       wpm: wpm,
       accuracy: accuracy
     }).then(() => {
-      console.log("Inserted successsfully")
+      //console.log("Inserted successsfully")
     });
   }
 
   const getLeaderBoard = () => {
-    Axios.get("http://localhost:3001/get").then((response) => {
-      console.log(response);
+    Axios.get("/api/get").then((response) => {
+      //console.log(response);
       setLeaderboard(response.data);
     });
   }
 
   return (
     <div className="App">
-      <div className ="section">
+      <div className="section">
         <div className='is-size-1 has-text-centered has-text-primary'>
           <h1>Typing Speed Test</h1>
         </div>
@@ -135,28 +135,29 @@ function App() {
       <div className='section'>
         <input className='input' type='text' onKeyDown={handleKeyStroke} value={currWord} onChange={(e) => {
           setCurrWord(e.target.value);
-          startCountDown();}}>
+          startCountDown();
+        }}>
         </input>
       </div>
       <div className='section'>
-        <button className='button is-info' onClick ={resetGame}>
+        <button className='button is-info' onClick={resetGame}>
           Reset
         </button>
       </div>
-      <div className ="section">
-        <div className ="card">
-          <div className ="card-content">
+      <div className="section">
+        <div className="card">
+          <div className="card-content">
             <>
-              {words.map((word, i) =>(
-                <span key ={i}>
+              {words.map((word, i) => (
+                <span key={i}>
                   {word.split("").map((char, index) => (
-                  <span className = {generateHighlight(index, i, char)} key={index}>{char}</span>
+                    <span className={generateHighlight(index, i, char)} key={index}>{char}</span>
                   ))}
-                  <span> </span>               
+                  <span> </span>
                 </span>
               ))}
             </>
-            </div>
+          </div>
         </div>
       </div>
       {gameState === 'finished' && (
@@ -180,8 +181,8 @@ function App() {
             }}></input>
           </div>
           <div className='section'>
-            <button className='button is-info' onClick ={insertUserResult}>
-            Add Score
+            <button className='button is-info' onClick={insertUserResult}>
+              Add Score
             </button>
           </div>
         </div>
@@ -200,20 +201,19 @@ function App() {
                 <th>Accuracy</th>
               </tr>
             </thead>
-              <tbody>
-              {leaderboard.map((data, index)=>{
-                return(
+            <tbody>
+              {leaderboard.map((data, index) => {
+                return (
                   <tr key={index}>
-                    <td>{index+1}</td>
+                    <td>{index + 1}</td>
                     <td>{data.username}</td>
                     <td>{data.WordsPerMin}</td>
                     <td>{data.Accuracy}</td>
                   </tr>
                 )
               })}
-              </tbody>
-            
-          </table> 
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
