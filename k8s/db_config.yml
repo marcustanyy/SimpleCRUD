@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-initdb-config
+data:
+  initdb.sql: |
+    CREATE DATABASE userdb;
+    USE userdb;
+    CREATE TABLE users (username varchar(45) DEFAULT NULL, WordsPerMin int NOT NULL DEFAULT '0', Accuracy decimal(10,0) NOT NULL, userid int NOT NULL AUTO_INCREMENT, PRIMARY KEY (userid));
