@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: server-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: server
+  template:
+    metadata:
+      labels:
+        component: server
+    spec:
+      containers:
+        - name: server
+          image: randytqw/typeracer_server
+          ports:
+            - containerPort: 3001
+          env:
+            - name: MYSQL_USER
+              value: root
+            - name: MYSQL_HOST
+              value: mysql
+            - name: MYSQL_DATABASE
+              value: userdb
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: password
